@@ -1,7 +1,6 @@
 package com.backend.example.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +16,22 @@ public class PostController {
 
 	@GetMapping(value = "")
 	public ResponseEntity<?> list() {
-		return new ResponseEntity<>(service.list(), HttpStatus.OK);
+		return service.list();
 	}
 
 	@PostMapping(value = "/add")
 	public ResponseEntity<?> add(@RequestBody Post post) {
-		return new ResponseEntity<>(service.add(post), HttpStatus.CREATED);
+		return service.add(post);
 	}
 
 	@PutMapping(value = "/{id}/update")
 	public ResponseEntity<?> edit(@PathVariable(value = "id") String id, @RequestBody Post post) {
-		return new ResponseEntity<>(service.edit(id, post), HttpStatus.OK);
+		return service.edit(id, post);
 	}
 
 	@DeleteMapping(value = "/{id}/delete")
 	public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
-		return new ResponseEntity<>(service.delete(id), HttpStatus.NO_CONTENT);
+		return service.delete(id);
 	}
 
 }
