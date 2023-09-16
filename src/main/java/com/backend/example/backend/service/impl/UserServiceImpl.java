@@ -1,9 +1,12 @@
 package com.backend.example.backend.service.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.backend.example.backend.firebase.FirebaseInitializer;
@@ -23,27 +26,26 @@ public class UserServiceImpl implements UserService {
 	private FirebaseInitializer firebase;
 
 	@Override
-	public String register(User user) {
-		Map<String, Object> docDdata = getDocData(user);
-		CreateRequest request = new CreateRequest().setEmail(user.getEmail()).setPassword(user.getPassword())
-				.setDisplayName(user.getDisplayName()).setPhoneNumber("+34".concat(user.getPhoneNumber()));
-
-		UserRecord newUser;
+	public ResponseEntity<String> register(User user) {
 		try {
-			newUser = getAuth().createUser(request);
+			validateData(user);
+
+			CreateRequest request = new CreateRequest().setEmail(user.getEmail()).setPassword(user.getPassword())
+					.setDisplayName(user.getDisplayName()).setPhoneNumber("+34".concat(user.getPhoneNumber()));
+
+			UserRecord newUser = getAuth().createUser(request);
+
+			Map<String, Object> docDdata = getDocData(user);
 
 			ApiFuture<WriteResult> writeResultApiFuture = getCollection().document().create(docDdata);
 
-			try {
-				if (null != writeResultApiFuture.get()) {
-					return getAuth().createCustomToken(newUser.getUid());
-				}
-				return null;
-			} catch (Exception e) {
-				return null;
+			if (null != writeResultApiFuture.get()) {
+				return ResponseEntity.ok(getAuth().createCustomToken(newUser.getUid()));
 			}
-		} catch (Exception e) {
 			return null;
+
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
@@ -62,6 +64,14 @@ public class UserServiceImpl implements UserService {
 		docDdata.put("displayName", user.getDisplayName());
 		docDdata.put("phoneNumber", user.getPhoneNumber());
 		return docDdata;
+	}
+
+	private void validateData(User user) {
+		checkArgument(user.getEmail().matches("^\\w+([\\.-]?\\w+)*@(gmail|hotmail|outlook)\\.com$"), "email malformed");
+		checkArgument(user.getName().length() >= 3, "name must have more than 3 characters");
+		checkArgument(user.getLastName().length() >= 3, "lastName must have more than 3 characters");
+		checkArgument(user.getPhoneNumber().matches("^(\\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$"),
+				"phone malformed");
 	}
 
 }
