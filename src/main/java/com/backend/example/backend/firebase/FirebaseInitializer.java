@@ -36,14 +36,13 @@ public class FirebaseInitializer {
 
 		if (FirebaseApp.getApps().isEmpty()) {
 			FirebaseApp.initializeApp(options);
-		} else {
-			log.warn("Connected to Firebase!");
 		}
+		log.warn("Connected to Firebase!");
 
 	}
 
 	public Firestore getFirestore() {
-		log.warn("Connected to Firestore DB1");
+		log.warn("Connected to Firestore DB!");
 		return FirestoreClient.getFirestore();
 	}
 
