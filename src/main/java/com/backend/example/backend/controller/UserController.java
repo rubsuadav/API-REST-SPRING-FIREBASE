@@ -1,7 +1,6 @@
 package com.backend.example.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ public class UserController {
 
 	@PostMapping(value = "/register")
 	public ResponseEntity<?> register(@RequestBody User user) {
-		return new ResponseEntity<>(service.register(user), HttpStatus.CREATED);
+		return service.register(user);
 	}
 
 }
