@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.backend.example.backend.firebase.FirebaseInitializer;
 import com.backend.example.backend.model.User;
 import com.backend.example.backend.service.UserService;
+import com.backend.example.backend.utils.FormatJson;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.WriteResult;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<String> register(User user) {
+		FormatJson format = new FormatJson();
 		try {
 			validateData(user);
 
@@ -40,12 +42,13 @@ public class UserServiceImpl implements UserService {
 			ApiFuture<WriteResult> writeResultApiFuture = getCollection().document().create(docDdata);
 
 			if (null != writeResultApiFuture.get()) {
-				return ResponseEntity.ok(getAuth().createCustomToken(newUser.getUid()));
+				return ResponseEntity
+						.ok(format.createJSONResponse(getAuth().createCustomToken(newUser.getUid())).toPrettyString());
 			}
 			return null;
 
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.badRequest().body(format.createJSONResponse(e.getMessage()).toPrettyString());
 		}
 	}
 
