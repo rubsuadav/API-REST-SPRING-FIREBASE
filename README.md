@@ -8,4 +8,4 @@ This project is for configuring firebase into an API REST creating by Spring Boo
 
 ######  To run the tests you have to do right click on "src/test/java" package --> Run As --> JUnit Test.
 
-(NOTE: TO RUN THE TESTS AND COVERGAE ALSO NEED THE APLICATION CREDENTIALS)
+(NOTE: TO RUN THE TESTS AND COVERAGE ALSO NEED THE APLICATION CREDENTIALS)
