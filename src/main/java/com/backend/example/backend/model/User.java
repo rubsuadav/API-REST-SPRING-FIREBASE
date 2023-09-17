@@ -1,11 +1,11 @@
 package com.backend.example.backend.model;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 public class User {
 
-	private String id;
 	private String email;
 	private String password;
 	private String name;
